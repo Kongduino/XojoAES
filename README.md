@@ -25,6 +25,23 @@ For `_buffer` functions you need to provide a buffer that's a multiple of `AES_B
 
 ## Python demo
 
+### Basic code
+
+```python
+aes.AES_init_ctx(ctxB, keyB)
+print("Key:")
+hexDump(key)
+print("Plaintext:")
+hexDump(plainB[0:finalLength])
+aes.AES_ECB_encrypt_buffer(ctxB, plainB, finalLength)
+print("Encrypted:")
+hexDump(plainB[0:finalLength])
+aes.AES_ECB_decrypt_buffer(ctxB, plainB, finalLength)
+print("Decrypted:")
+hexDump(plainB[0:finalLength])
+```
+
+
 ```
 % python3 test.py
 len(plain) = 48
