@@ -379,14 +379,41 @@ static void InvCipher(state_t* state, const uint8_t* RoundKey) {
 /*****************************************************************************/
 /* Public functions:                                                         */
 /*****************************************************************************/
+int padLength(int originalLength) {
+  if (originalLength % 16 == 0) return 0;
+  return 16 - (originalLength % 16);
+}
+
+void PKCS7(uint8_t* buf, int length, uint8_t b) {
+  int px, i;
+  px = length - b;
+  for (i = px; i < length; i++) buf[i] = b;
+}
+
 void AES_ECB_encrypt(const struct AES_ctx* ctx, uint8_t* buf) {
   // The next function call encrypts the PlainText with the Key using AES algorithm.
   Cipher((state_t*)buf, ctx->RoundKey);
 }
 
+void AES_ECB_encrypt_buffer(const struct AES_ctx* ctx, uint8_t* buf, int length) {
+  // The next function call encrypts the PlainText with the Key using AES algorithm.
+  for (int i = 0; i < length; i += AES_BLOCKLEN)  {
+    Cipher((state_t*)buf, ctx->RoundKey);
+    buf += AES_BLOCKLEN;
+  }
+}
+
 void AES_ECB_decrypt(const struct AES_ctx* ctx, uint8_t* buf) {
   // The next function call decrypts the PlainText with the Key using AES algorithm.
   InvCipher((state_t*)buf, ctx->RoundKey);
+}
+
+void AES_ECB_decrypt_buffer(const struct AES_ctx* ctx, uint8_t* buf, int length) {
+  // The next function call decrypts the PlainText with the Key using AES algorithm.
+  for (int i = 0; i < length; i += AES_BLOCKLEN)  {
+    InvCipher((state_t*)buf, ctx->RoundKey);
+    buf += AES_BLOCKLEN;
+  }
 }
 
 static void XorWithIv(uint8_t* buf, const uint8_t* Iv) {
