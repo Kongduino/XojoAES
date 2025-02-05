@@ -159,4 +159,4 @@ See? With CBC the cipher is different every time.
 
 # Don't use ECB though...
 
-As you can see, the cipher with ECB is always the same, whereas with CBC it changes every time, preventing the [easier attacks on the cipher](https://cryptopals.com/sets/2).
+As you can see, the cipher with ECB is always the same, whereas with CBC and CTR it changes every time, preventing the [easier attacks on the cipher](https://cryptopals.com/sets/2).
