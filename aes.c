@@ -477,3 +477,11 @@ void AES_CTR_xcrypt_buffer(struct AES_ctx* ctx, uint8_t* buf, uint32_t length) {
     buf[i] = (buf[i] ^ buffer[bi]);
   }
 }
+
+// Fills a buffer with random bytes from /dev/random
+void fillRandom(unsigned char *buffer, unsigned int len) {
+  FILE *fp = fopen ("/dev/random", "r");
+  fgets((char*)buffer, len, fp);
+  fclose(fp);
+}
+

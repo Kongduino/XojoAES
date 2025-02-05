@@ -2,6 +2,7 @@
 #define _AES_H_
 
 #include <stdint.h>
+#include <stdio.h>
 
 // #define the macros below to 1/0 to enable/disable the mode of operation.
 //
@@ -23,7 +24,7 @@
 #define AES_KEYLEN 24
 #define AES_keyExpSize 208
 #else
-#define AES_KEYLEN 16   // Key length in bytes
+#define AES_KEYLEN 16 // Key length in bytes
 #define AES_keyExpSize 176
 #endif
 
@@ -38,6 +39,7 @@ void AES_ctx_set_iv(struct AES_ctx* ctx, const uint8_t* iv);
 
 int padLength(int originalLength);
 void PKCS7(uint8_t* buf, int length, uint8_t b);
+void fillRandom(unsigned char *buffer, unsigned int len);
 
 // buffer size is exactly AES_BLOCKLEN bytes;
 // you need only AES_init_ctx as IV is not used in ECB
