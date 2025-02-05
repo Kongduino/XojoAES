@@ -214,7 +214,7 @@ CTR
 02.|20 73 74 72 69 6e 67 21 08 08 08 08 08 08 08 08 | | string!........|
    +------------------------------------------------+ +----------------+
 
-See? With CBC/CTR the cipher is different every time.See? With CBC the cipher is different every time.
+See? With CBC/CTR the cipher is different every time.
 ```
 
 # Don't use ECB though...
