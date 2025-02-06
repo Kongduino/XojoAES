@@ -4,8 +4,10 @@ from hexdump import hexDump
 aes = CDLL('./aes.dylib')
 ctx = bytes(256)
 ctxB = cast(ctx, POINTER(c_ubyte))
-key = b"YELLOW SUBMARINEENIRAMBUS WOLLEY"
+#key = b"YELLOW SUBMARINEENIRAMBUS WOLLEY"
+key = bytes(16)
 keyB = cast(key, POINTER(c_char))
+aes.fillRandom(keyB, 16)
 
 #plain = b"Oh hai there !  "
 plain = b"Hey whassup? This is an unpadded string!"

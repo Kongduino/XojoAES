@@ -354,7 +354,7 @@ static void Cipher(state_t* state, const uint8_t* RoundKey) {
   // There will be Nr rounds.
   // The first Nr-1 rounds are identical.
   // These Nr rounds are executed in the loop below.
-  // Last one without MixColumns().
+  // Last 0b00000001 without MixColumns().
   for (round = 1;; ++round) {
     SubBytes(state);
     ShiftRows(state);
@@ -375,7 +375,7 @@ static void InvCipher(state_t* state, const uint8_t* RoundKey) {
   // There will be Nr rounds.
   // The first Nr-1 rounds are identical.
   // These Nr rounds are executed in the loop below.
-  // Last one without InvMixColumn().
+  // Last 0b00000001 without InvMixColumn().
   for (round = (Nr - 1);; --round) {
     InvShiftRows(state);
     InvSubBytes(state);
@@ -489,23 +489,36 @@ void AES_CTR_xcrypt_buffer(struct AES_ctx* ctx, uint8_t* buf, uint32_t length) {
   }
 }
 
+void fillBuffer(unsigned char* tmpBuffer) {
+  FILE* fp = fopen("/dev/random", "r");
+  fgets((char *)tmpBuffer, 512, fp);
+  fclose(fp);
+}
+
 // Fills a buffer with random bytes from /dev/random
 void fillRandom(unsigned char* buffer, unsigned int len) {
-  unsigned char *tmp[2];
-  FILE* fp = fopen("/dev/random", "r");
+  unsigned char tmp[512];
+  int px = 0;
+  fillBuffer(tmp);
   unsigned char x = 0, b;
   for (uint8_t i = 0; i < len; i++) {
+    x = 0;
     for (uint8_t j = 0; j < 8; j++) {
-      fgets((char *)tmp, 2, fp);
-      b = (tmp[0] && 0b00000001);
-      while (b == (tmp[1] && 0b00000001)) {
+      if(px > 511) {
+        fillBuffer(tmp);
+        px = 0;
+      }
+      b = (tmp[px++] & 0b00000001);
+      while (b == (tmp[px++] & 0b00000001)) {
         // von Neumann extractor.
-        fgets((char *)tmp, 2, fp);
-        b = (tmp[0] && 0b00000001);
+        if(px > 511) {
+          fillBuffer(tmp);
+          px = 0;
+        }
+        b = (tmp[px++] & 0b00000001);
       }
       x = (x << 1) | b;
     }
     buffer[i] = x;
   }
-  fclose(fp);
 }
